@@ -202,5 +202,5 @@ Values (4,'Ahmed','M','2010-02-22','son');
 insert into dependent 
 Values (1,'mohamed','M','1989-06-22','son');
 use company_lab5;
-Alter table department add trial int;
+Alter table department add help int;
 
