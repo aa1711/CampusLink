@@ -203,4 +203,4 @@ insert into dependent
 Values (1,'mohamed','M','1989-06-22','son');
 use company_lab5;
 Alter table department add hi int;
-
+Alter table department add hell int;
