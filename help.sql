@@ -24,7 +24,7 @@ SET @avg_gpa = (SELECT AVG(CASE
     ELSE NULL
 END) 
 FROM courses as c, Enrollments as e WHERE c.studentid = e.studentid);
--- Notifications Table
+
 CREATE TABLE Notifications (
     NotificationID INT PRIMARY KEY AUTO_INCREMENT,
     UserID INT,
@@ -33,7 +33,7 @@ CREATE TABLE Notifications (
     IsRead BOOLEAN DEFAULT FALSE
 );
 
--- Conflict Resolution Requests Table
+
 CREATE TABLE ConflictResolutionRequests (
     RequestID INT PRIMARY KEY AUTO_INCREMENT,
     UserID INT,
@@ -43,7 +43,7 @@ CREATE TABLE ConflictResolutionRequests (
     Status VARCHAR(20) DEFAULT 'Pending'
 );
 
--- Audit Log Table
+
 CREATE TABLE AuditLog (
     LogID INT PRIMARY KEY AUTO_INCREMENT,
     UserID INT,
@@ -61,21 +61,21 @@ CREATE TABLE CourseSegments (
     FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
 );
 
--- Add a new student
+
 INSERT INTO Students (FName, LName, NationalID, Password, PhoneNumber, Address, Email, Bdate, Program)
 VALUES ('Wren', 'abdelal', '123456789', SHA2('hi aly', 256), '1234567890', '123 Elm St', 'johndoe@example.com', '2000-01-01', 'Computer Science');
 
 
--- Remove a student
+
 DELETE FROM Students
 WHERE StudentID = 1;
 
--- Suspend a student account
+
 UPDATE Students 
 SET Status = 'Suspended' 
 WHERE StudentID = 1;
 
--- Activate a suspended account
+
 UPDATE Students 
 SET Status = 'Active' 
 WHERE StudentID = 1;
@@ -89,24 +89,26 @@ WHERE StudentID = 1;
 INSERT INTO AuditLog (UserID, Action, Details)
 VALUES (1, 'Profile Update Request', 'Requested change of phone number to 9876543210.');
 
--- View student grades
+
 SELECT Grade 
 FROM Courses 
 WHERE StudentID = 1;
 
--- Calculate GPA
+-- alternative Calculate GPA
 SELECT AVG(GPA) AS StudentGPA 
 FROM Students 
 WHERE StudentID = 1;
+
 -- Add a new faculty
 INSERT INTO Faculty (Name)
 VALUES ('Engineering');
+
 -- Enroll a student in a course
 INSERT INTO courses VALUES (101, 'abdelal', 1, null, '123', '2000-01-01', 1, 'A', 2, null);
 INSERT INTO Enrollments (StudentId, CourseID)
 VALUES (1, 101);
 
--- Drop a course for a student
+-- a trial run at Dropping a course for a student
 DELETE FROM Enrollments
 WHERE StudentID = 1 AND CourseID = 101;
 INSERT INTO Enrollments (StudentId, CourseID)
@@ -137,12 +139,10 @@ SELECT *
 FROM ConflictResolutionRequests 
 WHERE Status = 'Pending';
 
--- Resolve a reported conflict
+-- set reported conflict status
 UPDATE ConflictResolutionRequests 
 SET Status = 'Resolved' 
 WHERE RequestID = 1;
-
-
 
 -- Remove a faculty
 DELETE FROM Faculty
@@ -156,21 +156,21 @@ VALUES ('Aly', 'Radwan', '987654321', SHA2('secure_password', 256), '0987654321'
 DELETE FROM Instructors
 WHERE InstructorID = 1;
 
--- Resolve timetable conflicts for students
+-- determine timetable conflicts for students
 SELECT s1.StudentID, s1.CourseID AS Course1, s2.CourseID AS Course2
 FROM Schedule s1
 JOIN Schedule s2
 ON s1.StudentID = s2.StudentID AND s1.Timeslot = s2.Timeslot AND s1.Day = s2.Day
 WHERE s1.CourseID <> s2.CourseID;
 
--- Update schedules to resolve conflicts
-UPDATE Schedule 
-SET TimetableConflict = FALSE 
-WHERE ScheduleID = 101;
+-- Update schedules to resolve conflicts still a work in progress
+-- UPDATE Schedule 
+-- SET TimetableConflict = FALSE 
+-- WHERE ScheduleID = 101;
 
 
 
--- Add or change grades for a student
+-- Add/change grades for a student
 UPDATE Courses 
 SET Grade = 'A' 
 WHERE CourseID = 101 AND StudentID = 2;
@@ -198,7 +198,7 @@ VALUES (2, 101, 'Request to move Course 101 to 2:00 PM.');
 INSERT INTO Courses (courseid,Name, FacultyID, PrerequisiteCourseID, ClassroomNumber, Datetime, InstructorID, Grade)
 VALUES (102,'Database Management', 1, NULL, 'B101', '2024-12-01 09:00:00', 2, NULL);
 
--- View course prerequisites
+
 SELECT PrerequisiteCourseID 
 FROM Courses 
 WHERE CourseID = 101;
@@ -207,14 +207,13 @@ WHERE CourseID = 101;
 INSERT INTO CourseSegments (CourseID, SegmentType, SegmentDetails)
 VALUES (101, 'Lecture', 'Lecture on database indexing.');
 
--- View course segments
+
 SELECT * 
 FROM CourseSegments 
 WHERE CourseID = 101;
 
 
 
--- Update tuition fee payment
 UPDATE Fees 
 SET AmountPaid = AmountPaid + 1000 
 WHERE StudentID = 1;
@@ -244,7 +243,7 @@ WHERE UserID = 1 AND IsRead = FALSE;
 
 
 
--- Store an encrypted password
+-- encryption
 INSERT INTO Students (FName, LName, NationalID, Password, PhoneNumber, Address, Email, Bdate, Program)
 VALUES ('Yahya', 'el demerdash', '1234567801', SHA2('secure_password', 256), '1234567890', '123 Elm St', 'yahya@gmail.com', '2000-01-01', 'Computer Science');
 
